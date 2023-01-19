@@ -1,0 +1,23 @@
+﻿@using RecipeBizObjects
+@model List<bizRecipe>
+@{
+    
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4" style="font-size:100px; font-weight: bold">Food Works</h1>
+    <hr/>
+    <p style="font-size:20px">
+        Discover food and drinks on Food Works for every occasion and any meal of the day. Whether it's quick and easy dinner or appetizers for entertaining, there’s a variety of inspiration to choose from.
+What delicious dishes will you find today? Visit the corners of some of the top culinary creators on Food Works, take a trip through collections of international cuisines that are taking kitchens by storm.
+    </p>
+   
+     <p>
+        @foreach (bizRecipe r in Model) 
+        {
+            <img src="images/@(r.Num).jpg" width="300" height="300" />
+           
+         }
+     </p> 
+</div>

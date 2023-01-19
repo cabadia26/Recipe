@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RecipeTest": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

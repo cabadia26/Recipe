@@ -1,0 +1,124 @@
+﻿@*AS: Amazing job! 100% I think it would be better to refer to recipe by its full name instead of rec.
+*@
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-primary">Recipes</h2>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success" onclick="RefreshList()">Refresh List</button>
+        <button class="btn btn-primary" onclick="ShowAll()">Show All</button>
+        <button class="btn btn-danger" onclick="HideAll()">Hide All</button>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <table class="table" id="tblRec">
+        </table>
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" id="dvPeek" onclick="ClearPeek()">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" id="dvAddToMeal">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const tblRec = document.getElementById("tblRec");
+    const dvPeek = document.getElementById("dvPeek");
+    const dvAddToMeal = document.getElementById("dvAddToMeal");
+
+    let recarray = [];
+
+    $().ready(function () {
+        RefreshList();
+    }
+    )
+
+    function RefreshList() {
+        fetch("/recipe/APIRecipeList")
+            .then(resp => resp.json())
+            .then(json_array => ShowRecipeList(json_array));
+    }
+    function ShowRecipeList(json_array) {
+        recarray = json_array;
+        tblRec.replaceChildren();
+        json_array.forEach(r => CreateRecRow(r));
+    }
+        function CreateRecRow(rec) {
+            //AS This line can be taken out.
+        const r = `
+            <tr>
+            <td><a href='/Recipe/Detail/${rec.code}'> ${rec.code}</a></td>
+            <td>${GetShowButton(rec, true)}</td>
+            <td>${GetShowButton(rec, false)}</td>
+            </tr>`
+        $("#tblRec").append(r);
+
+        }
+        function CreateRecCard(rec, peek) {
+            const dv = peek ? dvPeek : dvAddToMeal;
+            let card = `
+                   <div id="${peek ? " " : GetCardId(rec.code)}" class="col-md-4">
+                    <div class="card">
+                    ${peek ? "" : `<div class="card-header d-flex justify-content-end pe-1"><button onclick=HideCard('${rec.code}') class="btn btn-danger">X</button></div>`}
+              <img class="card-img-top" src="/images/${rec.num}.jpg" alt="Card image">
+              <div class="card-body">
+                <h4 class="card-title">${rec.recipeName}</h4>
+                <p class="card-text">${rec.firstName + " " + rec.lastName}</p>
+                <a href="/Recipe/Detail/${rec.code}" class="btn btn-primary">See Recipe</a>
+              </div>
+              </div>
+            </div>`
+            if (peek) {
+                dv.innerHTML = card;
+            }
+            else {
+                if (document.getElementById(GetCardId(rec.code)) != null) {
+                    HideCard(rec.code);
+                }
+                dv.innerHTML = card + dv.innerHTML;
+            }
+        }
+        function GetShowButton(rec, peek) {
+            return `<button onclick='ShowRec("${rec.code}", ${peek})' class='btn btn-primary bg-primary'>${peek ? "Peek" : "Add To Meal"}</button>`
+        }
+        function ShowRec(code, peek) {
+            const rec = recarray.find(r => r.code == code);
+            CreateRecCard(rec, peek);
+            window.scroll(0, 0);
+        }
+        function HideCard(code) {
+            const id = GetCardId(code);
+            const card = document.getElementById(id);
+            dvAddToMeal.removeChild(card);
+
+        }
+        function ShowAll() {
+            recarray.forEach(r => ShowRec(r.code, false));
+        }
+        function HideAll() {
+            console.log(recarray);
+            recarray.forEach(r => HideCard(r.code));
+        }
+        function ClearPeek() {
+            dvPeek.replaceChildren();
+        }
+        function GetCardId(code) {
+            return "card-" + code;
+        }
+</script>
+

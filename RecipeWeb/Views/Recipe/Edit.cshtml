@@ -1,0 +1,87 @@
+﻿@model RecipeBizObjects.bizRecipe
+
+@{
+    ViewData["Title"] = "Edit";
+    SelectList lstuser = new SelectList(Model.UserList(), "CreatedByUserId", "UserName");
+    SelectList lstcuisine = new SelectList(Model.CuisineList(), "CuisineId", "CuisineName");
+    
+}
+
+<h1>Edit @Model.RecipeName</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      
+            <input type="hidden" asp-for="RecipeId" />
+            <input type="hidden" asp-for="Num" />
+             <div class="form-group">
+                <label asp-for="CreatedByUserId" class="control-label"></label>
+                <select asp-for="CreatedByUserId" asp-items=lstuser class="form-control">
+                    <option value="">Select a User</option>
+                </select>
+                <span asp-validation-for="CreatedByUserId" class="text-danger"></span>
+            </div>
+            <br />
+           <div class="form-group">
+                <label asp-for="CuisineId" class="control-label"></label>
+                <select asp-for="CuisineId" asp-items=lstcuisine class="form-control">
+                    <option value="">Select a Cuisine</option>
+                </select>
+                <span asp-validation-for="CuisineId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="RecipeName" class="control-label"></label>
+                <input asp-for="RecipeName" class="form-control" />
+                <span asp-validation-for="RecipeName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Calories" class="control-label"></label>
+                <input asp-for="Calories" class="form-control" />
+                <span asp-validation-for="Calories" class="text-danger"></span>
+            </div>
+        
+            <div class="form-group">
+                <label asp-for="DraftDate" class="control-label"></label>
+                <input asp-for="DraftDate" class="form-control" />
+                <span asp-validation-for="DraftDate" class="text-danger"></span>
+            </div>
+            <br />
+               <div class="form-group">
+                <label asp-for="PublishedDate" class="control-label"></label>
+                <input asp-for="PublishedDate" class="form-control" />
+                <span asp-validation-for="PublishedDate" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="ArchivedDate" class="control-label"></label>
+                <input asp-for="ArchivedDate" class="form-control" />
+                <span asp-validation-for="ArchivedDate" class="text-danger"></span>
+            </div>
+            <br />
+                 <div class="form-group">
+                <label asp-for="StatusName" class="control-label"></label>
+                @Html.DisplayFor(model => model.StatusName)
+                <span asp-validation-for="StatusName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
